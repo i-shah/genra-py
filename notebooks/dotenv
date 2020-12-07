@@ -1,0 +1,4 @@
+TOP=path_to_top/genra-py
+SRC=path_to_top/genra-py/src
+DAT=path_to_top/genra-py/data
+FIG=path_to_top/genra-py/figs
