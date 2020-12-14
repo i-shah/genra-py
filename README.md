@@ -3,7 +3,7 @@
 
 [Read-Across](https://www.oecd.org/env/ehs/risk-assessment/groupingofchemicalschemicalcategoriesandread-across.htm) is widely used to fill data-gaps for untested chemicals. We developed [Genralised Read-Across (GenRA)](https://doi.org/10.1016/j.yrtph.2019.104480) to mimic a human expert’s manual reasoning based on similarity-weighted activity. This repository contains a Python 3 implementation for GenRA, called genra-py, which is based on the [scikit-learn](https://scikit-learn.org) [estimator](https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html?highlight=estimator#sklearn.base.BaseEstimator). We also describe two potential uses-cases for genra-py that uses published chemical structure, bioactivity and toxicity data.   
 
-
+![](figs/genra-viz.jpg)
 # Quick start
 
 Running the notebooks in this repository requires Python 3, [Anaconda](https://www.anaconda.com/), [Jupter](https://jupyter.org/)  and some additional configuration. 
