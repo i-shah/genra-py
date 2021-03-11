@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>genra.utl.ixml API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>genra.utl.ixml</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># $Id: ixml.py 9 2012-05-18 18:04:29Z ishah $
+
+import sys
+import string
+from lxml import etree
+from lxml.etree import XMLParser
+from lxml.etree import ElementTree
+#from xml.parsers import *
+from xml.parsers import expat
+from xml.etree.ElementTree import *
+import re
+from copy import *
+from types import *
+
+
+class Element:
+    &#39;A parsed XML element&#39;
+    def __init__(self,name,attributes):
+        &#39;Element constructor&#39;
+        # The element&#39;s tag name
+        self.name = name
+        # The element&#39;s attribute dictionary
+        self.attributes = attributes
+        # The element&#39;s cdata
+        self.cdata = &#39;&#39;
+        # The element&#39;s child element list (sequence)
+        self.children = []
+        
+    def AddChild(self,element):
+        &#39;Add a reference to a child element&#39;
+        self.children.append(element)
+        
+    def getAttribute(self,key):
+        &#39;Get an attribute value&#39;
+        return self.attributes.get(key)
+    
+    def getData(self):
+        &#39;Get the cdata&#39;
+        return self.cdata
+        
+    def getElements(self,name=&#39;&#39;):
+        &#39;Get a list of child elements&#39;
+        #If no tag name is specified, return the all children
+        if not name:
+            return self.children
+        else:
+            # else return only those children with a matching tag name
+            elements = []
+            for element in self.children:
+                if element.name == name:
+                    elements.append(element)
+            return elements
+
+    def searchElement(self,name=None,elems=[]):
+        if name==None: return
+        for element in self.children:
+            if element.name == name:
+                elems.append(element)
+            else:
+                element.searchElement(name,elems)
+        
+class Xml2Obj:
+    &#39;XML to Object&#39;
+    def __init__(self):
+        self.root = None
+        self.nodeStack = []
+        
+    def StartElement(self,name,attributes):
+        &#39;SAX start element even handler&#39;
+        # Instantiate an Element object
+        element = Element(name.encode(),attributes)
+        
+        # Push element onto the stack and make it a child of parent
+        if len(self.nodeStack) &gt; 0:
+            parent = self.nodeStack[-1]
+            parent.AddChild(element)
+        else:
+            self.root = element
+        self.nodeStack.append(element)
+        
+    def EndElement(self,name):
+        &#39;SAX end element event handler&#39;
+        self.nodeStack = self.nodeStack[:-1]
+
+    def CharacterData(self,data):
+        &#39;SAX character data event handler&#39;
+        if data.strip():
+            #data = data.encode()
+            element = self.nodeStack[-1]
+            element.cdata += data
+            return
+
+    def Parse(self,text=None,filename=None):
+        # Create a SAX parser
+        Parser = expat.ParserCreate()
+
+        # SAX event handlers
+        Parser.StartElementHandler = self.StartElement
+        Parser.EndElementHandler = self.EndElement
+        Parser.CharacterDataHandler = self.CharacterData
+
+        # Parse the XML File
+        if filename != None:
+            ParserStatus = Parser.Parse(open(filename,&#39;r&#39;).read(), 1)
+        elif text != None:
+            ParserStatus = Parser.Parse(text, 1)                 
+        return self.root
+    
+
+            
+def elemDict(elem):
+    E={}
+    def my_decode(x):
+        try:
+            y=x.decode(&#39;ascii&#39;)
+        except:
+            y=x
+
+        return y
+
+    if len(elem.attributes) &gt;0:
+        for k,v in elem.attributes.items():
+            if v != &#39;&#39;:
+                E[my_decode(k)]=my_decode(v)
+
+    if elem.cdata != &#39;&#39;:
+        #print elem.cdata
+        E[&#39;cdata&#39;]=my_decode(elem.cdata)
+
+    for e in elem.children:
+        #print e.name
+        k = my_decode(e.name)
+        if k not in E:
+            E[k]=[elemDict(e)]
+        else:
+            if isinstance(E[k],list):
+                E[k].append(elemDict(e))
+            else:
+                old=E[k]
+                E[k]=[old,elemDict(e)]
+    return E
+
+
+def cleanElemDict(E,tostr=True):
+    Out = {}
+    def toStr(a):
+        if tostr: return str(a)
+        else: return a
+    
+    if type(E)==dict:
+        for k1,v1 in E.items():
+            if k1==&#39;cdata&#39;:
+                return v1
+            else:
+                Out[str(k1)]=cleanElemDict(v1)
+        
+    elif type(E)==list:
+        if len(E)==1:
+            return cleanElemDict(E[0])
+        else:
+            return [cleanElemDict(e) for e in E]
+
+    else:
+        return E
+    
+    return Out</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="genra.utl.ixml.cleanElemDict"><code class="name flex">
+<span>def <span class="ident">cleanElemDict</span></span>(<span>E, tostr=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cleanElemDict(E,tostr=True):
+    Out = {}
+    def toStr(a):
+        if tostr: return str(a)
+        else: return a
+    
+    if type(E)==dict:
+        for k1,v1 in E.items():
+            if k1==&#39;cdata&#39;:
+                return v1
+            else:
+                Out[str(k1)]=cleanElemDict(v1)
+        
+    elif type(E)==list:
+        if len(E)==1:
+            return cleanElemDict(E[0])
+        else:
+            return [cleanElemDict(e) for e in E]
+
+    else:
+        return E
+    
+    return Out</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.elemDict"><code class="name flex">
+<span>def <span class="ident">elemDict</span></span>(<span>elem)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def elemDict(elem):
+    E={}
+    def my_decode(x):
+        try:
+            y=x.decode(&#39;ascii&#39;)
+        except:
+            y=x
+
+        return y
+
+    if len(elem.attributes) &gt;0:
+        for k,v in elem.attributes.items():
+            if v != &#39;&#39;:
+                E[my_decode(k)]=my_decode(v)
+
+    if elem.cdata != &#39;&#39;:
+        #print elem.cdata
+        E[&#39;cdata&#39;]=my_decode(elem.cdata)
+
+    for e in elem.children:
+        #print e.name
+        k = my_decode(e.name)
+        if k not in E:
+            E[k]=[elemDict(e)]
+        else:
+            if isinstance(E[k],list):
+                E[k].append(elemDict(e))
+            else:
+                old=E[k]
+                E[k]=[old,elemDict(e)]
+    return E</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="genra.utl.ixml.Element"><code class="flex name class">
+<span>class <span class="ident">Element</span></span>
+<span>(</span><span>name, attributes)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A parsed XML element</p>
+<p>Element constructor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Element:
+    &#39;A parsed XML element&#39;
+    def __init__(self,name,attributes):
+        &#39;Element constructor&#39;
+        # The element&#39;s tag name
+        self.name = name
+        # The element&#39;s attribute dictionary
+        self.attributes = attributes
+        # The element&#39;s cdata
+        self.cdata = &#39;&#39;
+        # The element&#39;s child element list (sequence)
+        self.children = []
+        
+    def AddChild(self,element):
+        &#39;Add a reference to a child element&#39;
+        self.children.append(element)
+        
+    def getAttribute(self,key):
+        &#39;Get an attribute value&#39;
+        return self.attributes.get(key)
+    
+    def getData(self):
+        &#39;Get the cdata&#39;
+        return self.cdata
+        
+    def getElements(self,name=&#39;&#39;):
+        &#39;Get a list of child elements&#39;
+        #If no tag name is specified, return the all children
+        if not name:
+            return self.children
+        else:
+            # else return only those children with a matching tag name
+            elements = []
+            for element in self.children:
+                if element.name == name:
+                    elements.append(element)
+            return elements
+
+    def searchElement(self,name=None,elems=[]):
+        if name==None: return
+        for element in self.children:
+            if element.name == name:
+                elems.append(element)
+            else:
+                element.searchElement(name,elems)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="genra.utl.ixml.Element.AddChild"><code class="name flex">
+<span>def <span class="ident">AddChild</span></span>(<span>self, element)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add a reference to a child element</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def AddChild(self,element):
+    &#39;Add a reference to a child element&#39;
+    self.children.append(element)</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.Element.getAttribute"><code class="name flex">
+<span>def <span class="ident">getAttribute</span></span>(<span>self, key)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get an attribute value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getAttribute(self,key):
+    &#39;Get an attribute value&#39;
+    return self.attributes.get(key)</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.Element.getData"><code class="name flex">
+<span>def <span class="ident">getData</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the cdata</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getData(self):
+    &#39;Get the cdata&#39;
+    return self.cdata</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.Element.getElements"><code class="name flex">
+<span>def <span class="ident">getElements</span></span>(<span>self, name='')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get a list of child elements</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getElements(self,name=&#39;&#39;):
+    &#39;Get a list of child elements&#39;
+    #If no tag name is specified, return the all children
+    if not name:
+        return self.children
+    else:
+        # else return only those children with a matching tag name
+        elements = []
+        for element in self.children:
+            if element.name == name:
+                elements.append(element)
+        return elements</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.Element.searchElement"><code class="name flex">
+<span>def <span class="ident">searchElement</span></span>(<span>self, name=None, elems=[])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def searchElement(self,name=None,elems=[]):
+    if name==None: return
+    for element in self.children:
+        if element.name == name:
+            elems.append(element)
+        else:
+            element.searchElement(name,elems)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="genra.utl.ixml.Xml2Obj"><code class="flex name class">
+<span>class <span class="ident">Xml2Obj</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>XML to Object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Xml2Obj:
+    &#39;XML to Object&#39;
+    def __init__(self):
+        self.root = None
+        self.nodeStack = []
+        
+    def StartElement(self,name,attributes):
+        &#39;SAX start element even handler&#39;
+        # Instantiate an Element object
+        element = Element(name.encode(),attributes)
+        
+        # Push element onto the stack and make it a child of parent
+        if len(self.nodeStack) &gt; 0:
+            parent = self.nodeStack[-1]
+            parent.AddChild(element)
+        else:
+            self.root = element
+        self.nodeStack.append(element)
+        
+    def EndElement(self,name):
+        &#39;SAX end element event handler&#39;
+        self.nodeStack = self.nodeStack[:-1]
+
+    def CharacterData(self,data):
+        &#39;SAX character data event handler&#39;
+        if data.strip():
+            #data = data.encode()
+            element = self.nodeStack[-1]
+            element.cdata += data
+            return
+
+    def Parse(self,text=None,filename=None):
+        # Create a SAX parser
+        Parser = expat.ParserCreate()
+
+        # SAX event handlers
+        Parser.StartElementHandler = self.StartElement
+        Parser.EndElementHandler = self.EndElement
+        Parser.CharacterDataHandler = self.CharacterData
+
+        # Parse the XML File
+        if filename != None:
+            ParserStatus = Parser.Parse(open(filename,&#39;r&#39;).read(), 1)
+        elif text != None:
+            ParserStatus = Parser.Parse(text, 1)                 
+        return self.root</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="genra.utl.ixml.Xml2Obj.CharacterData"><code class="name flex">
+<span>def <span class="ident">CharacterData</span></span>(<span>self, data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>SAX character data event handler</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def CharacterData(self,data):
+    &#39;SAX character data event handler&#39;
+    if data.strip():
+        #data = data.encode()
+        element = self.nodeStack[-1]
+        element.cdata += data
+        return</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.Xml2Obj.EndElement"><code class="name flex">
+<span>def <span class="ident">EndElement</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>SAX end element event handler</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def EndElement(self,name):
+    &#39;SAX end element event handler&#39;
+    self.nodeStack = self.nodeStack[:-1]</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.Xml2Obj.Parse"><code class="name flex">
+<span>def <span class="ident">Parse</span></span>(<span>self, text=None, filename=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Parse(self,text=None,filename=None):
+    # Create a SAX parser
+    Parser = expat.ParserCreate()
+
+    # SAX event handlers
+    Parser.StartElementHandler = self.StartElement
+    Parser.EndElementHandler = self.EndElement
+    Parser.CharacterDataHandler = self.CharacterData
+
+    # Parse the XML File
+    if filename != None:
+        ParserStatus = Parser.Parse(open(filename,&#39;r&#39;).read(), 1)
+    elif text != None:
+        ParserStatus = Parser.Parse(text, 1)                 
+    return self.root</code></pre>
+</details>
+</dd>
+<dt id="genra.utl.ixml.Xml2Obj.StartElement"><code class="name flex">
+<span>def <span class="ident">StartElement</span></span>(<span>self, name, attributes)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>SAX start element even handler</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def StartElement(self,name,attributes):
+    &#39;SAX start element even handler&#39;
+    # Instantiate an Element object
+    element = Element(name.encode(),attributes)
+    
+    # Push element onto the stack and make it a child of parent
+    if len(self.nodeStack) &gt; 0:
+        parent = self.nodeStack[-1]
+        parent.AddChild(element)
+    else:
+        self.root = element
+    self.nodeStack.append(element)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="genra.utl" href="index.html">genra.utl</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="genra.utl.ixml.cleanElemDict" href="#genra.utl.ixml.cleanElemDict">cleanElemDict</a></code></li>
+<li><code><a title="genra.utl.ixml.elemDict" href="#genra.utl.ixml.elemDict">elemDict</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="genra.utl.ixml.Element" href="#genra.utl.ixml.Element">Element</a></code></h4>
+<ul class="">
+<li><code><a title="genra.utl.ixml.Element.AddChild" href="#genra.utl.ixml.Element.AddChild">AddChild</a></code></li>
+<li><code><a title="genra.utl.ixml.Element.getAttribute" href="#genra.utl.ixml.Element.getAttribute">getAttribute</a></code></li>
+<li><code><a title="genra.utl.ixml.Element.getData" href="#genra.utl.ixml.Element.getData">getData</a></code></li>
+<li><code><a title="genra.utl.ixml.Element.getElements" href="#genra.utl.ixml.Element.getElements">getElements</a></code></li>
+<li><code><a title="genra.utl.ixml.Element.searchElement" href="#genra.utl.ixml.Element.searchElement">searchElement</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="genra.utl.ixml.Xml2Obj" href="#genra.utl.ixml.Xml2Obj">Xml2Obj</a></code></h4>
+<ul class="">
+<li><code><a title="genra.utl.ixml.Xml2Obj.CharacterData" href="#genra.utl.ixml.Xml2Obj.CharacterData">CharacterData</a></code></li>
+<li><code><a title="genra.utl.ixml.Xml2Obj.EndElement" href="#genra.utl.ixml.Xml2Obj.EndElement">EndElement</a></code></li>
+<li><code><a title="genra.utl.ixml.Xml2Obj.Parse" href="#genra.utl.ixml.Xml2Obj.Parse">Parse</a></code></li>
+<li><code><a title="genra.utl.ixml.Xml2Obj.StartElement" href="#genra.utl.ixml.Xml2Obj.StartElement">StartElement</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
