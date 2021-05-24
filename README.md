@@ -9,7 +9,7 @@
 # Easy starts 
 `pip install genra`
 
-or try our Docker image from on dockerhub at https://hub.docker.com/r/patlewig/genra-py:0.1.0
+or try our Docker image from on dockerhub at [https://hub.docker.com/r/patlewig/genra-py] and select tag 0.1.0
 
 The image contains the scipy Jupyter notebook, RDKit and a pip installable version of genra-py (https://github.com/i-shah/genra-py/). 
 
@@ -19,6 +19,10 @@ In a terminal type:
 
 Copy/paste the resulting url link into a new browser window. This should start the Jupyter lab session from your current working directory.
 
+To avoid typing the long argument in the terminal, using docker-compose is an alternative means of running the container.
+Type `docker-compose -f genra-docker-compose.yml up`
+To stop the container simply type:
+`docker-compose -f genra-docker-compose.yml down`
 
 
 # Alternatives
