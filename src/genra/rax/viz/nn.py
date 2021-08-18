@@ -80,7 +80,8 @@ class GenRAViewNN(GenRAView):
     
     self._NN_c = NN_c
     
-  def draw(self,cid,k=10,pred=False,t0=None):
+  def draw(self,cid,k=10,pred=False,t0=None,ax=None):
+    if ax: self._ax = ax
     self.circLayout(cid,k=k)
     self.drawArcs()
     self.drawChems()
@@ -116,6 +117,7 @@ class GenRAViewNN(GenRAView):
     # Target
     BGs.append(mpatches.Rectangle((xo-ch_hw,xo-ch_hh),ch_w,ch_h,zorder=1))
     Tgt = self._NNi.iloc[0]
+  
     CV(Tgt.smiles,x0=xo,y0=yo)
     txt = '\n'.join(wrap(Tgt.chemical_name,self._txt_wrap))
     ax.add_artist(text.Text(xo,yo+ch_hh,txt,
@@ -130,6 +132,7 @@ class GenRAViewNN(GenRAView):
       x0, y0 = C.x-ch_hw,C.y-ch_hh
       BGs.append(mpatches.Rectangle((C.x-ch_hw,C.y-ch_hh),ch_w,ch_h,zorder=1))
       try:
+        print(i,C.smiles,C.x,C.y)
         CV(C.smiles,x0=C.x,y0=C.y)
       except:
         print("Failed: {}".format(C.chemical_name))
