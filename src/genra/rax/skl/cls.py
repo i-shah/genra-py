@@ -10,9 +10,8 @@ Adapted from sklearn.neighbors.KNeighborsClassifier
 import numpy as np
 import sklearn
 from sklearn.base import ClassifierMixin
-from sklearn.neighbors._base import BaseEstimator, NeighborsBase,\
-        KNeighborsMixin, SupervisedIntegerMixin,\
-        _check_weights, _get_weights
+from sklearn.neighbors._base import _check_weights, _get_weights
+from sklearn.neighbors._classification import KNeighborsClassifier
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted,_is_arraylike, _num_samples
 from sklearn.utils.multiclass import unique_labels
 from scipy import stats
@@ -20,8 +19,7 @@ from sklearn.utils.extmath import weighted_mode
 
 import warnings
 
-class GenRAPredClass(NeighborsBase, KNeighborsMixin,
-                     SupervisedIntegerMixin, ClassifierMixin):
+class GenRAPredClass(KNeighborsClassifier):
     """GenRA Classifier implementing the k-nearest neighbors vote.
 
     Parameters
