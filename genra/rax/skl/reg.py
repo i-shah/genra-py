@@ -9,10 +9,8 @@ Adapted from sklearn.neighbors.KNeighborsRegressor
 
 import numpy as np
 import sklearn
-from sklearn.base import RegressorMixin
-from sklearn.neighbors._base import BaseEstimator, NeighborsBase,\
-        KNeighborsMixin, SupervisedIntegerMixin,SupervisedFloatMixin,\
-        _check_weights, _get_weights
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neighbors._base import _check_weights, _get_weights
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted,_is_arraylike, _num_samples
 from sklearn.utils.multiclass import unique_labels
 from scipy import stats
@@ -20,10 +18,7 @@ from sklearn.utils.extmath import weighted_mode
 
 import warnings
 
-class GenRAPredValue(NeighborsBase, 
-                     KNeighborsMixin,
-                     SupervisedFloatMixin,
-                     RegressorMixin):
+class GenRAPredValue(KNeighborsRegressor):
     """GenRA Value Prediction based on k-nearest neighbors.
 
     The target is predicted by local interpolation of the targets
