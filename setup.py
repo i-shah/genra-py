@@ -8,7 +8,7 @@ setup(
     name='genra',
     packages=find_packages(),
     version='0.1.8',
-    install_requires=['numpy', 'scipy', 'scikit-learn==1.3.1', 'lxml'],
+    install_requires=['numpy', 'scipy>=1.5.0', 'scikit-learn==1.3.1', 'lxml'],
     description='Generalised Read Across (GenRA) in Python',
     long_description = long_description,
     long_description_content_type = "text/markdown",
