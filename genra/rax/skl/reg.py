@@ -75,7 +75,7 @@ class GenRAPredValue(KNeighborsRegressor):
 
     """
 
-    def __init__(self, n_neighbors=5, sim_params=dict(),
+    def __init__(self, n_neighbors=5, 
                  algorithm='auto', leaf_size=30,
                  p=2, metric='minkowski', 
                  metric_params=None, n_jobs=None,

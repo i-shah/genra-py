@@ -9,7 +9,7 @@
 # Easy starts 
 `pip install genra`
 
-or try our Docker image from on dockerhub at [https://hub.docker.com/r/patlewig/genra-py] and select tag 0.1.0
+or try our Docker image from on dockerhub at [https://hub.docker.com/r/patlewig/genra-py]
 
 The image contains the scipy Jupyter notebook, RDKit and a pip installable version of genra-py (https://github.com/i-shah/genra-py/). 
 

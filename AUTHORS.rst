@@ -12,3 +12,4 @@ Contributors
 ------------
 
 Grace Patlewicz (patlewig)
+Kenta Baron-Furuyama (kbfepa)
