@@ -16,6 +16,11 @@ from sklearn.utils.multiclass import unique_labels
 from scipy import stats
 from sklearn.utils.extmath import weighted_mode
 
+from genra.rax.skl.hybrid_base import GenRAPredHybrid
+from collections.abc import Iterable
+from itertools import zip_longest
+import pandas as pd
+
 import warnings
 
 class GenRAPredValue(KNeighborsRegressor):
@@ -149,3 +154,89 @@ class GenRAPredValue(KNeighborsRegressor):
 
         return y_pred
 
+class GenRAPredValueHybrid(GenRAPredHybrid):
+    """GenRA-py continuous prediction class that supports hybridized calculations.
+
+    This class inherits from GenRAPredValue so that it is able to use self.get_params() method to
+    instantiate the component model objects for each fingerprint. Therefore, caution must be used, as
+    some of the inherited methods will not work.
+    """
+
+    # The component class to use for each fingerprint component
+    component_class = GenRAPredValue
+
+    def fit(self, X, Y):
+        """Same as sklearn.KneighborsRegressors.fit() method, but modified for the hybrid version.
+        Note:
+        - neighbors without data in some components are ignored in the final calculations
+
+        Parameters
+        ----------
+        X : Iterable(DataFrame)
+            Iterable of Pandas DataFrame representing each component training X data.
+            Must have matching (row) index with complementary Y parameter.
+
+        Y : Iterable(DataFrame)
+            Iterable of Pandas DataFrame representing each component training Y (target) data.
+            Must have matching (row) index with complementary X parameter.
+
+        """
+        # X and Y should be iterables
+        assert isinstance(X, Iterable), "X must be an iterable"
+        assert isinstance(Y, Iterable), "Y must be an iterable"
+        models = []
+        for idx, (X_component, Y_component) in enumerate(
+            zip_longest(X, Y, fillvalue=None)
+        ):
+            if X_component is None or Y_component is None:
+                raise Exception("X and Y must have the same number of components")
+            n = X_component.shape[0]
+            assert (
+                n == Y_component.shape[0]
+            ), f"X_component and Y_component must have the same number of rows at index={idx}"
+            model = self.component_class(**self.component_params)
+            # override n_neighbors in case Y_component smaller than the parameter set
+            model.set_params(n_neighbors=min(n, model.n_neighbors))
+            model.fit(X_component, Y_component)
+            models.append(model)
+
+        # should be immutable
+        self._models = tuple(models)
+        self._n_models = len(models)
+
+        # see https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier.fit
+        return self
+
+    def predict(self, X, hybrid_weights="even"):
+        """
+        Same as GenRAPredValue.predict() method, but modified for the hybrid version.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Test samples
+
+        hybrid_weights : list(float) | "even" (default="even")
+            List of float representing the hybrid fingerprint weights
+        """
+
+        # initialize empty dataframe; this will eventually be sum of weighted values across hybrid components
+        pred = pd.DataFrame()
+        sum_weights = 0
+        for model, X_component, weight in zip_longest(
+            self._models, X, self.get_hybrid_weights(hybrid_weights), fillvalue=None
+        ):
+            if model is None or X_component is None or weight is None:
+                raise Exception(
+                    "The number of components in fitted models, X, and hybrid_weights must be the same"
+                )
+            assert weight >= 0, "Weights must be non-negative"
+            pred = pred.add(
+                pd.DataFrame(
+                    model.predict(X_component) * weight,
+                ),
+                fill_value=0,
+            )
+            sum_weights += weight
+        assert sum_weights > 0, "At least one non-zero weight must be provided"
+        return np.array(pred) / sum_weights

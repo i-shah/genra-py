@@ -16,6 +16,11 @@ from sklearn.utils.multiclass import unique_labels
 from scipy import stats
 from sklearn.utils.extmath import weighted_mode
 
+from genra.rax.skl.hybrid_base import GenRAPredHybrid
+from collections.abc import Iterable
+from itertools import zip_longest
+import pandas as pd
+
 import warnings
 
 class GenRAPredClass(KNeighborsClassifier):
@@ -193,3 +198,130 @@ class GenRAPredClass(KNeighborsClassifier):
 
         return probabilities
 
+
+class GenRAPredClassHybrid(GenRAPredHybrid):
+    """GenRA-py classification prediction class that supports hybridized calculations. Designed to support multi-class
+    values.
+    """
+
+    # The component class to use for each hybrid component;
+    component_class = GenRAPredClass
+
+    def fit(self, X, Y):
+        """Same as sklearn.KneighborsClassifier.fit() method, but modified for the hybrid version.
+
+        Note:
+        - neighbors without data in some components are ignored in the final calculations
+
+        Parameters
+        ----------
+        X : Iterable(DataFrame)
+            Iterable of Pandas DataFrame representing each component training X data.
+            Must have matching (row) index with complementary Y parameter.
+
+        Y : Iterable(DataFrame)
+            Iterable of Pandas DataFrame representing each component training Y (target) data.
+            Must have matching (row) index with complementary X parameter.
+
+        """
+
+        # X and Y must be iterables
+        assert isinstance(X, Iterable), "X must be an iterable"
+        assert isinstance(Y, Iterable), "Y must be an iterable"
+        models = []
+        # initialize empty dataframe; this will eventually be union of y data across hybrid components
+        y = pd.DataFrame()
+        for idx, (X_component, Y_component) in enumerate(
+            zip_longest(X, Y, fillvalue=None)
+        ):
+            if X_component is None or Y_component is None:
+                raise Exception("X and Y must have the same number of components")
+            n = X_component.shape[0]
+            list(X_component.index) == list(
+                Y_component.index
+            ), f"X_component and Y_component must have the same indices at component {idx}"
+            model = self.component_class(**self.component_params)
+            # override n_neighbors in case Y_component smaller than the parameter set
+            model.set_params(n_neighbors=min(n, model.n_neighbors))
+            model.fit(X_component, Y_component)
+            # set component model index
+            model._index = Y_component.index
+            models.append(model)
+            # takes the union
+            y = y.combine_first(Y_component)
+
+        # attributes used in other class methods
+        self._models = tuple(models)
+        self._n_models = len(models)
+        self._index = y.index
+        # raw values of the data
+        # e.g., array(['A', 'B', 'A', 'C', 'A'], dtype=object)
+        y_vals = y.to_numpy().flatten()
+        # classes in the data; part of the upstream sklearn classifier's object attribute
+        # e.g., array(['A', 'B', 'C'], dtype=object)
+        self.classes_ = np.unique(y_vals)
+        # dictionary that maps class values to index; needed to do lookups
+        # e.g., {'A': 0, 'B': 1, 'C': 2}
+        self.classes_to_y_dict = {k: v for v, k in enumerate(self.classes_)}
+        # Indices of classes of values in the data; part of the upstream sklearn classifier's object attribute
+        # e.g., array([0, 1, 0, 2, 0])
+        self._y = np.vectorize(self.classes_to_y_dict.get)(y_vals)
+
+        # see https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier.fit
+        return self
+
+    def predict_proba(self, X, hybrid_weights="even"):
+        """Same as GenRAPredClass.pred_proba() method, but modified for the hybrid version.
+
+        Note:
+        neighbors without data in some components are ignored in the final calculations
+
+        Parameters
+        ----------
+        X : Iterable(DataFrame)
+            Iterable of Pandas DataFrame representing each component testing X data
+
+        hybrid_weights : list(float) | "even" (default="even")
+            List of float representing the hybrid fingerprint weights
+
+        """
+        # initialize empty dataframe; this will eventually be sum of probabilities across hybrid components
+        proba = pd.DataFrame()
+        sum_weights = 0
+        for model, X_component, weight in zip_longest(
+            self._models, X, self.get_hybrid_weights(hybrid_weights), fillvalue=None
+        ):
+            if model is None or X_component is None or weight is None:
+                raise Exception(
+                    "The number of components in fitted models, X, and hybrid_weights must be the same"
+                )
+            assert weight >= 0, "Weights must be non-negative"
+            sum_weights += weight
+            curr_proba = pd.DataFrame(
+                model.predict_proba(X_component) * weight, columns=model.classes_
+            )
+            if not proba.empty:
+                assert (
+                    curr_proba.shape[0] == proba.shape[0]
+                ), "The number of test samples (n_queries) must match across components"
+            proba = proba.add(curr_proba, fill_value=0)
+
+        assert sum_weights > 0, "At least one non-zero weight must be provided"
+        return np.array(proba) / sum_weights
+
+    def predict(self, X, hybrid_weights="even"):
+        """Same as GenRAPredClass.predict() method, but modified for the hybrid version.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Test samples
+
+        hybrid_weights : list(float) | "even" (default="even")
+            List of float representing the hybrid fingerprint weights
+
+        """
+
+        weighted_probas = self.predict_proba(X, hybrid_weights=hybrid_weights)
+        class_idx = np.argmax(weighted_probas, axis=1)
+        return self.classes_[class_idx]
