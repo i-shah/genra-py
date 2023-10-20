@@ -10,7 +10,7 @@ Adapted from sklearn.neighbors.KNeighborsRegressor
 import numpy as np
 import sklearn
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.neighbors._base import _check_weights, _get_weights
+from sklearn.neighbors._base import _get_weights
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted,_is_arraylike, _num_samples
 from sklearn.utils.multiclass import unique_labels
 from scipy import stats
@@ -28,6 +28,13 @@ class GenRAPredValue(KNeighborsRegressor):
     ----------
     n_neighbors : int, optional (default = 5)
         Number of neighbors to use by default for :meth:`kneighbors` queries.
+    weights: {'uniform', 'distance'} or callable, default = 'uniform'
+
+    ‘uniform’ : uniform weights. All points in each neighborhood are weighted equally.
+
+    ‘distance’ : weight points by the inverse of their distance. in this case, closer neighbors of a query point will have a greater influence than neighbors which are further away.
+
+    [callable] : a user-defined function which accepts an array of distances, and returns an array of the same shape containing the weights.
 
 
     algorithm : {'auto', 'ball_tree', 'kd_tree', 'brute'}, optional
@@ -48,7 +55,7 @@ class GenRAPredValue(KNeighborsRegressor):
         required to store the tree.  The optimal value depends on the
         nature of the problem.
 
-    p : integer, optional (default = 2)
+    p : float, optional (default = 2)
         Power parameter for the Minkowski metric. When p = 1, this is
         equivalent to using manhattan_distance (l1), and euclidean_distance
         (l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.
@@ -86,7 +93,7 @@ class GenRAPredValue(KNeighborsRegressor):
               leaf_size=leaf_size, metric=metric, p=p,
               metric_params=metric_params, n_jobs=n_jobs, 
               **kwargs)
-        self.weights = _check_weights('uniform')
+        
 
     @property
     def _pairwise(self):

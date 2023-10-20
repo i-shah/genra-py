@@ -10,7 +10,7 @@ Adapted from sklearn.neighbors.KNeighborsClassifier
 import numpy as np
 import sklearn
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neighbors._base import _check_weights, _get_weights
+from sklearn.neighbors._base import _get_weights
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted,_is_arraylike, _num_samples
 from sklearn.utils.multiclass import unique_labels
 from scipy import stats
@@ -93,7 +93,7 @@ class GenRAPredClass(KNeighborsClassifier):
             leaf_size=leaf_size, metric=metric, p=p,
             metric_params=metric_params,
             n_jobs=n_jobs, **kwargs)
-        self.weights = _check_weights(weights)
+        self.weight_type = weights
 
     def predict(self, X):
         """Predict the class labels for the provided data.
@@ -121,7 +121,7 @@ class GenRAPredClass(KNeighborsClassifier):
 
         n_outputs = len(classes_)
         n_queries = _num_samples(X)
-        weights = _get_weights(neigh_dist, self.weights)
+        weights = _get_weights(neigh_dist, self.weight_type)
 
         y_pred = np.empty((n_queries, n_outputs), dtype=classes_[0].dtype)
         for k, classes_k in enumerate(classes_):
@@ -167,7 +167,7 @@ class GenRAPredClass(KNeighborsClassifier):
 
         n_queries = _num_samples(X)
 
-        weights = _get_weights(neigh_dist, self.weights)
+        weights = _get_weights(neigh_dist, self.weight_type)
         if weights is None:
             weights = np.ones_like(neigh_ind)
 
