@@ -139,8 +139,8 @@ class GenRAPredValue(KNeighborsRegressor):
 
         y_pred = np.empty((X.shape[0], _y.shape[1]), dtype=np.float64)
 
+        denom=np.sum(neigh_sim, axis=1)
         for j in range(_y.shape[1]):
-            denom=np.sum(neigh_sim[j])
             num = np.sum(_y[neigh_ind, j] * neigh_sim[j], axis=1)
             y_pred[:, j] = num / denom
 
