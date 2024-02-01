@@ -140,7 +140,8 @@ class GenRAPredHybrid(abc.ABC, KNeighborsMixin, NeighborsBase):
             error_str = f"{_slice} is not valid for X with shape {X.shape}"
             assert _slice.start < X.shape[1], error_str
             if _slice.stop is not None:
-                assert _slice.stop < X.shape[1], error_str
+                # _slice.stop == X.shape[1] still works for last component
+                assert _slice.stop <= X.shape[1], error_str
             # create component model, and fit
             model = self.component_class(**params)
             model.fit(X[:, _slice], y)
