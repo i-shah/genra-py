@@ -5,8 +5,8 @@
 import pytest
 
 
-from genra_py import genra_py
-
+from genra.rax.skl.cls import GenRAPredClass
+from genra.rax.skl.reg import GenRAPredValue
 
 @pytest.fixture
 def response():
