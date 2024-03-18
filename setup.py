@@ -7,8 +7,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name='genra',
     packages=find_packages(),
-    version='0.2.2',
-    install_requires=['numpy', 'scipy', 'scikit-learn==1.3.1', 'lxml'],
+    version='0.2.3',
+    install_requires=['numpy', 'scipy', 'scikit-learn', 'lxml'],
     description='Generalised Read Across (GenRA) in Python',
     long_description = long_description,
     long_description_content_type = "text/markdown",
