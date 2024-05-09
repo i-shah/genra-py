@@ -15,7 +15,6 @@ from sklearn.utils.validation import check_X_y, check_array, check_is_fitted,_is
 from sklearn.utils.multiclass import unique_labels
 from scipy import stats
 from sklearn.utils.extmath import weighted_mode
-from sklearn.metrics import pairwise_distances
 
 import warnings
 
@@ -70,15 +69,6 @@ class GenRAPredValue(KNeighborsRegressor):
         must be square during fit. X may be a :term:`Glossary <sparse graph>`,
         in which case only "nonzero" elements may be considered neighbors.
 
-    universal_distance: boolean, default 'True'
-        determines whether a maximum distance should be used with the given metric.
-        For example, the Jaccard metric takes values between 0 and 1, so keeping this
-        feature on with the value True will scale all distances by a factor of 1 then subtracted
-        from 1 to obtain similarity scores. The Canberra metric takes values between 0 and 
-        the number of features used, so if you have 2048 fingerprint bits all distances will 
-        be scaled by 2048 before subtraction from 1. Setting this value to 'False' instead scales
-        distances by the distance of each chemical in the test set from its nth neighbor. 
-
     metric_params : dict, optional (default = None)
         Additional keyword arguments for the metric function.
 
@@ -95,41 +85,22 @@ class GenRAPredValue(KNeighborsRegressor):
     def __init__(self, n_neighbors=5, 
                  algorithm='auto', leaf_size=30,
                  p=2, metric='minkowski', 
-                 metric_params=None, n_jobs=None, universal_distance = True,
+                 metric_params=None, n_jobs=None,
                  **kwargs):
         super().__init__(
               n_neighbors=n_neighbors,
               algorithm=algorithm,
               leaf_size=leaf_size, metric=metric, p=p,
-              metric_params=metric_params, n_jobs=n_jobs,
+              metric_params=metric_params, n_jobs=n_jobs, 
               **kwargs)
-        self.universal_distance = universal_distance
-    
+        
 
     @property
     def _pairwise(self):
         # For cross-validation routines to split data correctly
         return self.metric == 'precomputed'
-    
-    def maxDistance(self, X = None):
-        """
-        Compute the maximum distance between two chemicals (with binary print values, also works for
-        Canberra metric with continuous prints)
-        
-        Helps to identify test chemicals lacking source analogues.
-        """
-        query_is_train  = X is None
-        if query_is_train:
-            X = self._fit_X
-        dims = X.shape[1]
-        empty = np.zeros((1, dims), dtype=np.float64)
-        full = np.empty((1,dims), dtype=np.float64)
-        full.fill(1)
-        max_distance = pairwise_distances(empty, full, metric = self.metric)
-        
-        return max_distance
 
-    def kneighbors_sim(self,X = None):
+    def kneighbors_sim(self,X):
         """
         Find the k-nearest neighbours for each instance and similarity scores. 
         All distances (D) are converted to similarity (S) by:
@@ -141,36 +112,17 @@ class GenRAPredValue(KNeighborsRegressor):
 
         """
         neigh_dist, neigh_ind = self.kneighbors(X)
-
-        # Check for chems with no similarities
-        lost_chems = np.all(neigh_dist == self.maxDistance(X), axis = 1)
-        lost_chem_indices = []
-        counter = 0
-        for boolean in lost_chems:
-            if boolean:
-                lost_chem_indices.append(counter)
-            counter += 1
-        if len(lost_chem_indices) > 0:
-            print(f"According to this metric, the training data may not contain source analogues for the chemical(s) \n with the following row indices within the testing set: {lost_chem_indices} ")
-        
         
         # Convert distances to similarities:
-        #This will use the univeral_distance feature, as old Jaccard uses did
-        if self.universal_distance:
-            division_scalar = self.maxDistance(X)
-            neigh_dist_n = neigh_dist/division_scalar
-            neigh_sim = 1-neigh_dist_n
-        #This will use the version previously matched to non-Jaccard metrics, somputing row-by-row
-        #maximums
+        if self.metric == 'jaccard':
+            neigh_sim = 1-neigh_dist
         else:
-            division_array = neigh_dist.max(1).copy()
-            division_array[division_array == 0] = 1
-            neigh_dist_n = neigh_dist / division_array[:,None]
+            neigh_dist_n = neigh_dist / neigh_dist.max()
             neigh_sim = 1 - neigh_dist_n                       
         
         return neigh_sim, neigh_ind
     
-    def predict(self, X = None):
+    def predict(self, X):
         """Predict the target for the provided data
 
         Parameters
@@ -184,16 +136,9 @@ class GenRAPredValue(KNeighborsRegressor):
         y : array of int, shape = [n_queries] or [n_queries, n_outputs]
             Target values
         """
-        query_is_train = X is None
-        if query_is_train:
-            X = self._fit_X
-        
         X = check_array(X, accept_sparse='csr')
 
-        if query_is_train:
-            neigh_sim, neigh_ind = self.kneighbors_sim()
-        else:
-            neigh_sim, neigh_ind = self.kneighbors_sim(X)
+        neigh_sim, neigh_ind = self.kneighbors_sim(X)
         
         _y = self._y
         if _y.ndim == 1:
@@ -204,10 +149,6 @@ class GenRAPredValue(KNeighborsRegressor):
         denom=np.sum(neigh_sim, axis=1)
         for j in range(_y.shape[1]):
             num = np.sum(_y[neigh_ind, j] * neigh_sim, axis=1)
-            if 0 in denom:
-                bool_list = list(denom == 0)
-                denom[bool_list] = neigh_sim.shape[1]
-                num[bool_list] = np.sum(_y[neigh_ind,j][bool_list], axis = 1)
             y_pred[:, j] = num / denom
 
         if self._y.ndim == 1:
