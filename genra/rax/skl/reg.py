@@ -142,16 +142,17 @@ class GenRAPredValue(KNeighborsRegressor):
         """
         neigh_dist, neigh_ind = self.kneighbors(X)
 
-        # Check for chems with no similarities
-        lost_chems = np.all(neigh_dist == self.maxDistance(X), axis = 1)
-        lost_chem_indices = []
-        counter = 0
-        for boolean in lost_chems:
-            if boolean:
-                lost_chem_indices.append(counter)
-            counter += 1
-        if len(lost_chem_indices) > 0:
-            print(f"According to this metric, the training data may not contain source analogues for the chemical(s) \n with the following row indices within the testing set: {lost_chem_indices} ")
+        # Check for chems with no similarities (only works with universal_distance on)
+        if self.universal_distance:
+            lost_chems = np.all(neigh_dist == self.maxDistance(X), axis = 1)
+            lost_chem_indices = []
+            counter = 0
+            for boolean in lost_chems:
+                if boolean:
+                    lost_chem_indices.append(counter)
+                counter += 1
+            if len(lost_chem_indices) > 0:
+                print(f"According to this metric, the training data may not contain source analogues for the chemical(s) \n with the following row indices within the testing set: {lost_chem_indices} ")
         
         
         # Convert distances to similarities:
