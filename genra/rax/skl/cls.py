@@ -85,17 +85,18 @@ class GenRAPredClass(KNeighborsClassifier):
 
     def __init__(self, n_neighbors=5,
                  weights='uniform', algorithm='auto', leaf_size=30,
-                 p=2, metric='jaccard', metric_params=None, n_jobs=None,
+                 p=2, metric='jaccard', metric_params=None, n_jobs=None, universal_distance = True,
                  **kwargs):
         super().__init__(
             n_neighbors=n_neighbors,
             algorithm=algorithm,
             leaf_size=leaf_size, metric=metric, p=p,
-            metric_params=metric_params,
+            metric_params=metric_params, 
             n_jobs=n_jobs, **kwargs)
         self.weight_type = weights
+        self.universal_distance = universal_distance
 
-    def predict(self, X):
+    def predict(self, X = None):
         """Predict the class labels for the provided data.
 
         Parameters
@@ -109,9 +110,17 @@ class GenRAPredClass(KNeighborsClassifier):
         y : array of shape [n_queries] or [n_queries, n_outputs]
             Class labels for each data sample.
         """
+        
+        query_is_train = X is None
+        if query_is_train:
+            X = self._fit_X
+
         X = check_array(X, accept_sparse='csr')
 
-        neigh_dist, neigh_ind = self.kneighbors(X)
+        if query_is_train:
+            neigh_dist, neigh_ind = self.kneighbors()
+        else:
+            neigh_dist, neigh_ind = self.kneighbors(X)
 
         classes_ = self.classes_
         _y = self._y
@@ -139,7 +148,7 @@ class GenRAPredClass(KNeighborsClassifier):
         return y_pred
         
     
-    def predict_proba(self, X):
+    def predict_proba(self, X = None):
         """Return probability estimates for the test data X.
 
         Parameters
@@ -155,9 +164,17 @@ class GenRAPredClass(KNeighborsClassifier):
             The class probabilities of the input samples. Classes are ordered
             by lexicographic order.
         """
+        query_is_train = X is None
+        if query_is_train:
+            X = self._fit_X
+        
         X = check_array(X, accept_sparse='csr')
 
-        neigh_dist, neigh_ind = self.kneighbors(X)
+        if query_is_train:
+            neigh_dist, neigh_ind = self.kneighbors()
+        else:
+            neigh_dist, neigh_ind = self.kneighbors(X)
+
 
         classes_ = self.classes_
         _y = self._y

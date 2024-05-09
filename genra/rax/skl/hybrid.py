@@ -35,6 +35,7 @@ from itertools import zip_longest
 import numpy as np
 import scipy
 from sklearn.neighbors._base import KNeighborsMixin, NeighborsBase
+import sklearn.metrics 
 
 from genra.rax.skl.binary import BinaryMixin, GenRAPredBinary
 from genra.rax.skl.cls import GenRAPredClass
@@ -57,6 +58,7 @@ class GenRAPredHybrid(abc.ABC, KNeighborsMixin, NeighborsBase):
         metric="minkowski",
         metric_params=None,
         n_jobs=None,
+        universal_distance = True,
     ):
         """Parameters mirror those from __init__ methods in Scikit-learn's Kneighborsclassifier and Kneighborsregressor,
         which are also mirroed by GenRAPredClass and GenRAPredValue. Two additional parameters are added
@@ -81,6 +83,7 @@ class GenRAPredHybrid(abc.ABC, KNeighborsMixin, NeighborsBase):
         )
         self.slices = slices
         self.hybrid_weights = hybrid_weights
+        self.universal_distance = universal_distance
 
     @property
     @abc.abstractmethod
@@ -329,7 +332,39 @@ class GenRAPredHybrid(abc.ABC, KNeighborsMixin, NeighborsBase):
             return neigh_dist, neigh_ind
         else:
             return neigh_ind
+        
+    def maxDistance(
+            self,
+            X = None,
+    ):
+        """ Hybridization of distance function for MaxDistance calculcations of GenraPredValue """
 
+        sum_weights = 0
+        # currently only implemented for jaccard and cosine
+        if X is None:
+            dims = self._fit_X.shape[1]
+        else:
+            dims = X.shape[1]
+        
+        max_components = np.empty((len(self.hybrid_weights),))
+
+        a = np.zeros((1, dims), dtype=np.float64)
+        b = np.empty((1,dims), dtype=np.float64)
+        b.fill(1)
+    
+        i = 0
+        for _slice, hybrid_weight in zip(self.slices, self.hybrid_weights):
+            sum_weights += hybrid_weight
+
+            a_component = np.array(a)[:, _slice]
+            b_component = np.array(b)[:, _slice]
+
+            max_components[i] = sklearn.metrics.pairwise_distances(a_component, b_component, metric = self.metric)
+            i += 1
+        
+        max_distance = np.dot(max_components,self.hybrid_weights)/sum_weights
+
+        return max_distance
 
 class GenRAPredClassHybrid(GenRAPredHybrid, GenRAPredClass):
     """GenRA-py classification prediction class that supports hybridized calculations. Designed to support multi-class
